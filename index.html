@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>ÊÍáíá ÍÑİåÇí ÇÎÈÇÑ ÇŞÊÕÇÏí</title>
+  <title>ØªØ­Ù„ÛŒÙ„ Ø­Ø±ÙÙ‡â€ŒØ§ÛŒ Ø§Ø®Ø¨Ø§Ø± Ø§Ù‚ØªØµØ§Ø¯ÛŒ</title>
   <style>
     body {
       font-family: 'Vazir', Tahoma, sans-serif;
@@ -92,12 +92,12 @@
   </style>
 </head>
 <body>
-  <h2>ÊÍáíá åæÔãäÏ ÇÎÈÇÑ ÇŞÊÕÇÏí æ ÇÑÒí</h2>
+  <h2>ØªØ­Ù„ÛŒÙ„ Ù‡ÙˆØ´Ù…Ù†Ø¯ Ø§Ø®Ø¨Ø§Ø± Ø§Ù‚ØªØµØ§Ø¯ÛŒ Ùˆ Ø§Ø±Ø²ÛŒ</h2>
 
   <div class="container">
-    <p>ãÊä ÎÈÑ ÑÇ æÇÑÏ ˜äíÏ:</p>
-    <textarea id="newsInput" placeholder="ÇíäÌÇ ÎÈÑ ÑÇ æÇÑÏ ˜äíÏ..."></textarea>
-    <button onclick="analyzeNews()">ÊÍáíá ˜ä</button>
+    <p>Ù…ØªÙ† Ø®Ø¨Ø± Ø±Ø§ ÙˆØ§Ø±Ø¯ Ú©Ù†ÛŒØ¯:</p>
+    <textarea id="newsInput" placeholder="Ø§ÛŒÙ†Ø¬Ø§ Ø®Ø¨Ø± Ø±Ø§ ÙˆØ§Ø±Ø¯ Ú©Ù†ÛŒØ¯..."></textarea>
+    <button onclick="analyzeNews()">ØªØ­Ù„ÛŒÙ„ Ú©Ù†</button>
 
     <div id="result" class="result"></div>
   </div>
@@ -160,21 +160,21 @@
         });
       }
 
-      let html = `<p><strong>ÏÑÕÏ ÇåãíÊ ÎÈÑ:</strong> ${Math.min(100, totalMatches * 7)}%</p>`;
+      let html = `<p><strong>Ø¯Ø±ØµØ¯ Ø§Ù‡Ù…ÛŒØª Ø®Ø¨Ø±:</strong> ${Math.min(100, totalMatches * 7)}%</p>`;
 
       for (let currency in impact) {
         const pos = impact[currency].positive;
         const neg = impact[currency].negative;
         const total = pos + neg;
         const barWidth = Math.min(100, total * 10);
-        let sentiment = 'ÎäËí', sentimentClass = 'neutral';
-        if (pos > neg) { sentiment = 'ãËÈÊ'; sentimentClass = 'positive'; }
-        else if (neg > pos) { sentiment = 'ãäİí'; sentimentClass = 'negative'; }
+        let sentiment = 'Ø®Ù†Ø«ÛŒ', sentimentClass = 'neutral';
+        if (pos > neg) { sentiment = 'Ù…Ø«Ø¨Øª'; sentimentClass = 'positive'; }
+        else if (neg > pos) { sentiment = 'Ù…Ù†ÙÛŒ'; sentimentClass = 'negative'; }
 
         html += `
           <div class="currency-result">
             <h4>${currency}</h4>
-            <p>ãËÈÊ: ${pos} | ãäİí: ${neg} ? <span class="${sentimentClass}"><strong>${sentiment}</strong></span></p>
+            <p>Ù…Ø«Ø¨Øª: ${pos} | Ù…Ù†ÙÛŒ: ${neg} ? <span class="${sentimentClass}"><strong>${sentiment}</strong></span></p>
             <div class="score-bar"><div class="score-fill" style="width: ${barWidth}%;"></div></div>
           </div>
         `;
