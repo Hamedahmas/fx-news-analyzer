@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title> Õ·Ì· Õ—›Âù«Ì «Œ»«— «ﬁ ’«œÌ</title>
+  <style>
+    body {
+      font-family: 'Vazir', Tahoma, sans-serif;
+      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #00e0ff;
+    }
+
+    .container {
+      background: #1c1c1e;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      max-width: 900px;
+      margin: auto;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      resize: vertical;
+      background: #2c2c2e;
+      color: #fff;
+    }
+
+    button {
+      background: #00e0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 12px;
+      margin-top: 15px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #00b3cc;
+    }
+
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #111;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.1);
+    }
+
+    .currency-result {
+      background: #222;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border-left: 5px solid #00e0ff;
+    }
+
+    .positive { color: #00ff90; }
+    .negative { color: #ff4c4c; }
+    .neutral { color: #ccc; }
+
+    .score-bar {
+      height: 8px;
+      background: #555;
+      margin-top: 8px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .score-fill {
+      height: 100%;
+      background: #00e0ff;
+    }
+  </style>
+</head>
+<body>
+  <h2> Õ·Ì· ÂÊ‘„‰œ «Œ»«— «ﬁ ’«œÌ Ê «—“Ì</h2>
+
+  <div class="container">
+    <p>„ ‰ Œ»— —« Ê«—œ ò‰Ìœ:</p>
+    <textarea id="newsInput" placeholder="«Ì‰Ã« Œ»— —« Ê«—œ ò‰Ìœ..."></textarea>
+    <button onclick="analyzeNews()"> Õ·Ì· ò‰</button>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const keywords = {
+      USD: {
+        positive: ["interest rate hike", "strong jobs", "economic growth", "fed hawkish", "taper", "inflation rise", "gdp increase", "us surplus", "dollar strong"],
+        negative: ["rate cut", "recession", "unemployment", "dovish", "shutdown", "debt ceiling", "dollar weak", "deficit", "stagflation"]
+      },
+      EUR: {
+        positive: ["ecb hike", "eurozone growth", "euro strong", "germany exports", "eu surplus", "gdp euro"],
+        negative: ["ecb cut", "debt crisis", "piigs", "euro weak", "inflation euro", "eurozone slowdown"]
+      },
+      JPY: {
+        positive: ["boj hike", "yen strong", "japan exports rise", "trade surplus japan", "gdp japan rise"],
+        negative: ["boj easing", "yen weak", "inflation japan", "stimulus japan", "negative rates"]
+      },
+      GBP: {
+        positive: ["boe hike", "pound strength", "uk recovery", "uk gdp rise", "brexit deal", "uk surplus"],
+        negative: ["boe cut", "pound drop", "brexit uncertainty", "uk inflation", "uk deficit"]
+      },
+      CHF: {
+        positive: ["snb hike", "franc strong", "swiss surplus", "swiss gdp rise"],
+        negative: ["snb cut", "franc weak", "swiss inflation", "swiss slowdown"]
+      },
+      CAD: {
+        positive: ["boc hike", "canadian growth", "oil price rise", "cad strong", "exports rise"],
+        negative: ["boc cut", "cad weak", "oil drop", "inflation canada", "housing crash"]
+      },
+      AUD: {
+        positive: ["rba hike", "australian exports", "iron ore rise", "aud strength", "china demand"],
+        negative: ["rba cut", "aud weak", "china slowdown", "housing dip", "australian inflation"]
+      },
+      NZD: {
+        positive: ["rbnz hike", "nzd strength", "dairy export rise", "nz surplus", "growth nz"],
+        negative: ["rbnz cut", "nzd weak", "dairy price drop", "nz inflation", "recession nz"]
+      }
+    };
+
+    function analyzeNews() {
+      const text = document.getElementById("newsInput").value.toLowerCase();
+      const resultDiv = document.getElementById("result");
+      let totalMatches = 0;
+      let impact = {};
+
+      for (let currency in keywords) {
+        impact[currency] = { positive: 0, negative: 0 };
+
+        keywords[currency].positive.forEach(word => {
+          const count = (text.match(new RegExp(word, "g")) || []).length;
+          impact[currency].positive += count;
+          totalMatches += count;
+        });
+
+        keywords[currency].negative.forEach(word => {
+          const count = (text.match(new RegExp(word, "g")) || []).length;
+          impact[currency].negative += count;
+          totalMatches += count;
+        });
+      }
+
+      let html = `<p><strong>œ—’œ «Â„Ì  Œ»—:</strong> ${Math.min(100, totalMatches * 7)}%</p>`;
+
+      for (let currency in impact) {
+        const pos = impact[currency].positive;
+        const neg = impact[currency].negative;
+        const total = pos + neg;
+        const barWidth = Math.min(100, total * 10);
+        let sentiment = 'Œ‰ÀÌ', sentimentClass = 'neutral';
+        if (pos > neg) { sentiment = '„À» '; sentimentClass = 'positive'; }
+        else if (neg > pos) { sentiment = '„‰›Ì'; sentimentClass = 'negative'; }
+
+        html += `
+          <div class="currency-result">
+            <h4>${currency}</h4>
+            <p>„À» : ${pos} | „‰›Ì: ${neg} ? <span class="${sentimentClass}"><strong>${sentiment}</strong></span></p>
+            <div class="score-bar"><div class="score-fill" style="width: ${barWidth}%;"></div></div>
+          </div>
+        `;
+      }
+
+      resultDiv.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
